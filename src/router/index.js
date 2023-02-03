@@ -11,10 +11,12 @@ export default new Router({
         {
             path: '/',
             redirect: '/Login',
+            hidden: true,
         },
         {
             path: '/login',
             name: 'login',
+            hidden: true,
             component: () => import('@/components/Login')
         },
         {
@@ -55,7 +57,7 @@ export default new Router({
         },
         {
             path: '/home',
-            name: '学生管理',
+            name: '数据管理',
             icon: 'fa fa-bar-chart',
             redirect: '/home/student',
             component: () => import('@/components/Home'),
@@ -100,6 +102,7 @@ export default new Router({
         {
             path: '*',
             name: 'notFound',
+            hidden: true,
             component: () => import('@/components/NotFound')
         }
     ],

@@ -9,6 +9,7 @@
             <el-container>
                 <!-- <el-aside width="200px">Aside</el-aside> -->
                 <el-main>
+                    <Breadcrumb />
                     <router-view />
                 </el-main>
                 <el-footer>
@@ -26,9 +27,10 @@
 import Header from '../Layout/Header.vue'
 import Menu from '../Layout/Menu.vue'
 import Footer from '../Layout/Footer.vue'
+import Breadcrumb from '../Home/common/Breadcrumb.vue'
 export default {
     name: 'home',
-    components: { Header, Menu, Footer },
+    components: { Header, Menu, Footer, Breadcrumb },
     data() {
         return {
 
