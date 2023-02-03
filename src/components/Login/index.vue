@@ -1,33 +1,123 @@
 <template>
-    <div>
-        login
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="success">成功按钮</el-button>
-        <el-button type="info">信息按钮</el-button>
-        <el-button type="warning">警告按钮</el-button>
+    <div class="login">
+        <div class="login-conten">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>墨涵教育后台管理系统</span>
+                </div>
+                <!-- 表单 -->
+                <div class="login-form">
+                    <el-form ref="form" :rules="rules" :model="mhjy" label-width="80px">
+                        <el-form-item label="用户名" prop="username">
+                            <el-input v-model="mhjy.username"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" prop="password">
+                            <el-input v-model="mhjy.password"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" size="large" @click="login">登录</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </div>
     </div>
 </template>
 
 <script>
+// import { loginAPI } from '@/api/user'
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+// import router from '@/router';
 export default {
-    name: 'MhjyIndex',
+    name: 'login',
 
     data() {
         return {
-
+            mhjy: {
+                username: '',
+                password: ''
+            },
+            rules: {
+                username: [
+                    {
+                        required: true, message: '请填写用户名', trigger: 'blur'
+                    }
+                ],
+                password: [
+                    {
+                        required: true, message: '请填写正确密码', trigger: 'blur'
+                    }
+                ]
+            }
         };
     },
 
     mounted() {
 
     },
-
+    computed: {
+        ...mapState(['userInfo'])
+    },
     methods: {
+        // ...mapMutations(['getLogin']),
+        ...mapActions(['getLoginAction']),
+        login() {
+            // 校验是否通过
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    this.getLoginAction(this.mhjy)
+                    // console.log(this.mhjy);
+                    // const { data } = await loginAPI(this.mhjy)
+                    // const { status, message } = data.data
+                    // if (status === 200) {
+                    //     this.$message({ message, type: 'success' })
+                    //     router.push(
+                    //         {
+                    //             path: '/home'
+                    //         }
+                    //     )
+                    // }
 
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        }
     },
 };
 </script>
 
 <style lang="less" scoped>
+.login {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: url('../../assets/images/login-bgc.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    .login-conten {
+        width: 500px;
+        height: 300px;
+
+        .box-card {
+            .clearfix {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                    font-size: 22px;
+                }
+            }
+
+            .el-button {
+                width: 100%;
+            }
+        }
+    }
+}
 </style>
