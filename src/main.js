@@ -3,6 +3,7 @@ import App from './App.vue'
 // 全局引入模式
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import 'default-passive-events'
 Vue.use(ElementUI);
 // 引入字体图标
 import 'font-awesome/css/font-awesome.min.css'

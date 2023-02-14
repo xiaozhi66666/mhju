@@ -56,30 +56,30 @@ export default new Router({
             ]
         },
         {
-            path: '/home',
+            path: '/map',
             name: '数据管理',
             icon: 'fa fa-bar-chart',
-            redirect: '/home/student',
+            redirect: '/map/student',
             component: () => import('@/components/Home'),
             children: [
                 {
-                    path: '/home/dataView',
+                    path: '/map/dataView',
                     name: '数据概览',
                     icon: 'fa fa-bar-chart',
                     component: () => import('@/components/dataAnalysis/DataView.vue'),
                 },
                 {
-                    path: '/home/mapView',
+                    path: '/map/mapView',
                     name: '地图预览',
                     icon: 'fa fa-line-chart',
                     component: () => import('@/components/dataAnalysis/MapView.vue'),
                 }, {
-                    path: '/home/scoreMap',
+                    path: '/map/scoreMap',
                     name: '分数地图',
                     icon: 'fa fa-line-chart',
                     component: () => import('@/components/dataAnalysis/ScoreMap.vue'),
                 }, {
-                    path: '/home/travelMap',
+                    path: '/map/travelMap',
                     name: '旅游地图',
                     icon: 'fa fa-line-chart',
                     component: () => import('@/components/dataAnalysis/TravelMap.vue'),
