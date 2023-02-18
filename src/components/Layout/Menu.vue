@@ -50,6 +50,8 @@ export default {
 
 <style lang="less" scoped>
 .menu {
+    overflow-y: hidden;
+
     .el-aside {
         height: 100%;
         // overflow: hidden;

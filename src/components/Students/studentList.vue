@@ -1,46 +1,255 @@
 <template>
     <div>
-        <Form :tableData="tableData" :propsArray="propsArray" />
+        <div class="add">
+            <el-button type="primary" size="large" @click="addStuInfo" icon="el-icon-circle-plus-outline">新增</el-button>
+        </div>
+        <Form :loading="loading" :total="total" :tableData="stuData" :propsArray="propsArray" @open="openDialog"
+            @del="del" />
+        <div class="dialog">
+            <el-dialog title="学生详细信息" :visible.sync="dialogVisible" width="40%">
+                <div class="body">
+                    <img :src="studentInfo.imgUrl" alt="" class="userImg">
+                    <div class="info">
+                        <p>姓名： <span>{{ studentInfo.name }}</span> </p>
+                        <p>年龄： <span>{{ studentInfo.age }}</span></p>
+                        <p>学籍号： <span>{{ studentInfo.id }}</span></p>
+                    </div>
+                </div>
+            </el-dialog>
+            <el-dialog title="学生信息录入" :visible.sync="dialogFormVisible" width="30%" @close="closeAdd">
+                <el-form :model="addStu" :rules="rules" ref="form">
+                    <el-form-item label="学生姓名" prop="name" :label-width="formLabelWidth">
+                        <el-input v-model="addStu.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学生年龄" prop="age" :label-width="formLabelWidth">
+                        <el-input v-model="addStu.age" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学生id" prop="id" :label-width="formLabelWidth">
+                        <el-input v-model="addStu.id" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学生生日" prop="birdthay" :label-width="formLabelWidth">
+                        <el-date-picker type="date" placeholder="选择日期" v-model="addStu.birdthay"
+                            value-format="yyyy-MM-dd"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="学生性别" prop="sex" :label-width="formLabelWidth">
+                        <el-select v-model="addStu.sex" placeholder="请选性别">
+                            <el-option label="男" value="1"></el-option>
+                            <el-option label="女" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submitForm">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
 import Form from '@/components/common/Form.vue'
+import { getStuListAPI } from '@/api/stu'
+import _ from 'lodash'
 export default {
     components: { Form },
     data() {
         return {
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-            }],
+            stuData: [],
+            total: 0,
             propsArray: [
                 {
-                    prop: 'date',
-                    label: '日期'
+                    prop: 'birdthay',
+                    label: '日期',
+                    width: 300
                 },
                 {
                     prop: 'name',
-                    label: '姓名'
+                    label: '姓名',
+                    width: 200
                 },
                 {
-                    prop: 'address',
-                    label: '地址'
+                    prop: 'age',
+                    label: '年龄',
+                    width: 100
+                }, {
+                    prop: 'id',
+                    label: '学生ID',
+                    width: 500
+                }, {
+                    prop: 'sex',
+                    label: '性别',
+                    width: 100
                 }
-            ]
+            ],
+            formLabelWidth: '40',
+            dialogVisible: false,
+            dialogFormVisible: false,
+            studentInfo: {},
+            addStu: {
+                name: '',
+                age: '',
+                sex: '',
+                id: '',
+                birdthay: ''
+            },
+            rules: {
+                name: [
+                    {
+                        required: true, message: '请填写学生姓名', trigger: 'blur'
+                    }
+                ],
+                age: [
+                    {
+                        required: true, message: '请填写学生年龄', trigger: 'blur'
+                    }
+                ],
+                id: [
+                    {
+                        required: true, message: '请填写学生id', trigger: 'blur'
+                    }
+                ],
+                birdthay: [
+                    {
+                        required: true, message: '请选择学生生日', trigger: 'blur'
+                    }
+                ],
+                sex: [
+                    {
+                        required: true, message: '请选择学生性别', trigger: 'blur'
+                    }
+                ],
+            }
         }
+    },
+    created() {
+        this.getStuList()
+    },
+    methods: {
+        async getStuList() {
+            this.loading = true
+            try {
+                const { data } = await getStuListAPI()
+                this.stuData = data.data.list
+                this.total = data.data.total
+                this.stuData.map(i => {
+                    if (i.sex == 1) {
+                        i.sex = '男'
+                    } else {
+                        i.sex = '女'
+                    }
+                })
+            } catch (error) {
+
+            } finally {
+                this.loading = false
+            }
+        },
+        openDialog(i) {
+            console.log('父组件');
+            // 打开弹框
+            this.dialogVisible = true
+            // 传递详细信息
+            this.studentInfo = i
+        },
+        // 删除
+        async del(i) {
+            // 确认删除？
+            try {
+                await this.$confirm('确定删除此学生信息？是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                this.stuData = this.stuData.filter(item => item.id !== i.id)
+                this.$message({ message: '已删除成功！', type: 'success' })
+            } catch (error) {
+                this.$message({ message: '已取消删除', type: "info" })
+            }
+        },
+        // 新增
+        addStuInfo() {
+            this.dialogFormVisible = true
+        },
+        test() {
+
+        },
+        // 确定新增
+        async submitForm() {
+            try {
+                await this.$refs['form'].validate()
+                console.log('新增人员信息是', this.addStu);
+                const obj = _.cloneDeep(this.addStu)
+                console.log('深克隆结果', obj);
+                this.stuData.unshift({ ...obj, imgUrl: 'https://img2.baidu.com/it/u=2321976118,1503111808&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500' })
+                this.$message({ message: '新增学生信息成功！', type: 'success' })
+                this.dialogFormVisible = false
+                // this.$refs['form'].resetFields()
+            } catch (error) {
+                this.$message({ message: '未通过验证', type: 'error' })
+                console.log(error);
+            } finally {
+                // 重置表单值以及校验结果
+            }
+        },
+        // 关闭新增信息弹框的回调
+        closeAdd() {
+            console.log('关闭了');
+            // 关闭时重置所有值以及校验结果
+            this.$refs['form'].resetFields()
+        }
+        // open() {
+        //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //     }).then(() => {
+        //         this.$message({
+        //             type: 'success',
+        //             message: '删除成功!'
+        //         });
+        //     }).catch(() => {
+        //         this.$message({
+        //             type: 'info',
+        //             message: '已取消删除'
+        //         });
+        //     });
+        // }
     }
 }
 </script>
+
+<style lang="less">
+.add {
+    margin-bottom: 20px;
+}
+
+.dialog {
+    .body {
+        display: flex;
+
+        .userImg {
+            width: 100px;
+            height: 120px;
+        }
+
+        .info {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            p {
+                font-size: 20px;
+                // color: aqua;
+            }
+
+            span {
+                color: #000;
+                font-size: 18px;
+            }
+
+        }
+
+    }
+}
+</style>

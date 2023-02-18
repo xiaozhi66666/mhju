@@ -9,9 +9,15 @@
                 <img src="" alt="">
                 <span>欢迎您！</span>
                 <span>{{ userInfo.username }}</span>
-                <img :src=" userInfo.imageUrl " alt="" v-if="userInfo.imageUrl">
-                <i class="el-icon-user-solid" v-else></i>
-                <!-- <span>退出</span> -->
+                <el-dropdown @command="handleCommand">
+                    <img :src="userInfo.imageUrl" alt="" v-if="userInfo.imageUrl">
+                    <i class="el-icon-user-solid" v-else></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item :command="i" v-for="(i, index) in testA" :key="index">{{
+                            i.meg
+                        }}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </div>
         </header>
 
@@ -25,7 +31,7 @@ export default {
 
     data() {
         return {
-            // userInfo:{}
+            testA: [{ id: 1, meg: '退出登录' }, { id: 2, meg: '修改个人资料' }]
         };
     },
 
@@ -38,7 +44,15 @@ export default {
         }
     },
     methods: {
-
+        handleCommand(a) {
+            if (a.id == 1) {
+                // 退出登录
+                this.$store.commit('loginOut')
+                this.$router.push('/login')
+            } else {
+                this.$message({ message: '修改个人资料模块待开发中~', type: 'success' })
+            }
+        }
     },
 };
 </script>

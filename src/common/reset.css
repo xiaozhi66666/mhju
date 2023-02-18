@@ -148,3 +148,7 @@ select:focus,
 textarea:focus {
     outline: -webkit-focus-ring-color auto 0;
 }
+/* 关闭弹框Y轴滚动条 */
+.el-dialog__wrapper{
+    overflow-y: hidden!important;
+}

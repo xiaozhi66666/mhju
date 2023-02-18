@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="breadcrumb">
         <el-card>
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -8,3 +8,8 @@
         </el-card>
     </div>
 </template>
+<style lang="less">
+.breadcrumb {
+    margin-bottom: 30px;
+}
+</style>

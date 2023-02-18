@@ -66,18 +66,6 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.getLoginAction(this.mhjy)
-                    // console.log(this.mhjy);
-                    // const { data } = await loginAPI(this.mhjy)
-                    // const { status, message } = data.data
-                    // if (status === 200) {
-                    //     this.$message({ message, type: 'success' })
-                    //     router.push(
-                    //         {
-                    //             path: '/home'
-                    //         }
-                    //     )
-                    // }
-
                 } else {
                     console.log('error submit!!');
                     return false;
