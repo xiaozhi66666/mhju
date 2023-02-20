@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="add">
-            <el-button type="primary" size="large" @click="addStuInfo" icon="el-icon-circle-plus-outline">新增</el-button>
+            <Search @addStuInfo="addStuInfo" @searchInfo="searchInfo" :label="labelMsg" />
         </div>
-        <Form :loading="loading" :total="total" :tableData="stuData" :propsArray="propsArray" @open="openDialog"
-            @del="del" />
+        <Form :btnS="btnInfo" :isShowIndex="true" :loading="loading" :total="total" :tableData="stuData"
+            :propsArray="propsArray" @open="openDialog" @del="del" />
         <div class="dialog">
-            <el-dialog title="学生详细信息" :visible.sync="dialogVisible" width="40%">
-                <div class="body">
+            <el-dialog :title="isShowInfo ? '学生详细信息' : '学生信息录入'" :visible.sync="dialogVisible" width="40%">
+                <div class="body" v-if="isShowInfo">
                     <img :src="studentInfo.imgUrl" alt="" class="userImg">
                     <div class="info">
                         <p>姓名： <span>{{ studentInfo.name }}</span> </p>
@@ -15,43 +15,47 @@
                         <p>学籍号： <span>{{ studentInfo.id }}</span></p>
                     </div>
                 </div>
-            </el-dialog>
-            <el-dialog title="学生信息录入" :visible.sync="dialogFormVisible" width="30%" @close="closeAdd">
-                <el-form :model="addStu" :rules="rules" ref="form">
-                    <el-form-item label="学生姓名" prop="name" :label-width="formLabelWidth">
-                        <el-input v-model="addStu.name" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="学生年龄" prop="age" :label-width="formLabelWidth">
-                        <el-input v-model="addStu.age" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="学生id" prop="id" :label-width="formLabelWidth">
-                        <el-input v-model="addStu.id" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="学生生日" prop="birdthay" :label-width="formLabelWidth">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="addStu.birdthay"
-                            value-format="yyyy-MM-dd"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="学生性别" prop="sex" :label-width="formLabelWidth">
-                        <el-select v-model="addStu.sex" placeholder="请选性别">
-                            <el-option label="男" value="1"></el-option>
-                            <el-option label="女" value="2"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="submitForm">确 定</el-button>
+                <div class="form" v-if="!isShowInfo">
+                    <el-form :model="addStu" :rules="rules" ref="form">
+                        <el-form-item label="学生姓名" prop="name" :label-width="formLabelWidth">
+                            <el-input v-model="addStu.name" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="学生年龄" prop="age" :label-width="formLabelWidth">
+                            <el-input v-model="addStu.age" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="学生id" prop="id" :label-width="formLabelWidth">
+                            <el-input v-model="addStu.id" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="学生生日" prop="birdthay" :label-width="formLabelWidth">
+                            <el-date-picker type="date" placeholder="选择日期" v-model="addStu.birdthay"
+                                value-format="yyyy-MM-dd"></el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="学生性别" prop="sex" :label-width="formLabelWidth">
+                            <el-select v-model="addStu.sex" placeholder="请选性别">
+                                <el-option label="男" value="1"></el-option>
+                                <el-option label="女" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="submitForm">确 定</el-button>
+                        </div>
+                    </el-form>
                 </div>
             </el-dialog>
+            <!-- <el-dialog title="学生信息录入" :visible.sync="dialogFormVisible" width="30%" @close="closeAdd">
+
+                    </el-dialog> -->
         </div>
     </div>
 </template>
 <script>
 import Form from '@/components/common/Form.vue'
+import Search from '@/components/common/Search.vue'
 import { getStuListAPI } from '@/api/stu'
 import _ from 'lodash'
 export default {
-    components: { Form },
+    components: { Form, Search },
     data() {
         return {
             stuData: [],
@@ -81,6 +85,16 @@ export default {
                     width: 100
                 }
             ],
+            btnInfo: {
+                icon1: 'el-icon-zoom-in',
+                icon2: 'el-icon-delete',
+                msg1: '查看',
+                msg2: '删除'
+            },
+            labelMsg: {
+                msg1: '姓名',
+                msg2: '学生id'
+            },
             formLabelWidth: '40',
             dialogVisible: false,
             dialogFormVisible: false,
@@ -118,7 +132,8 @@ export default {
                         required: true, message: '请选择学生性别', trigger: 'blur'
                     }
                 ],
-            }
+            },
+            isShowInfo: true
         }
     },
     created() {
@@ -148,6 +163,7 @@ export default {
             console.log('父组件');
             // 打开弹框
             this.dialogVisible = true
+            this.isShowInfo = true
             // 传递详细信息
             this.studentInfo = i
         },
@@ -168,7 +184,18 @@ export default {
         },
         // 新增
         addStuInfo() {
-            this.dialogFormVisible = true
+            this.dialogVisible = true
+            this.isShowInfo = false
+            // this.dialogFormVisible = true
+
+        },
+        // 查询
+        searchInfo(i) {
+            if (i.id == '' && i.user == '') {
+                this.getStuList()
+            } else {
+                this.stuData = this.stuData.filter((item) => i.id === item.id || i.user === item.name)
+            }
         },
         test() {
 
@@ -221,6 +248,11 @@ export default {
 <style lang="less">
 .add {
     margin-bottom: 20px;
+
+    .el-card__body {
+        display: flex;
+        width: 100%;
+    }
 }
 
 .dialog {

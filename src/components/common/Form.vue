@@ -1,22 +1,28 @@
 <template>
     <div class="table">
-        <el-table v-loading="loading" border :data="comData" style="width: 100%">
-            <el-table-column type="index" align="center" :index="currentIndex">
-            </el-table-column>
+        <el-table :stripe="stripe" v-loading="loading" border :data="comData" style="width: 100%">
+            <div v-if="isShowIndex">
+                <el-table-column type="index" align="center" :index="currentIndex">
+                </el-table-column>
+            </div>
             <el-table-column :prop="i.prop" :label="i.label" align="center" v-for="i, index in propsArray" :key="index">
             </el-table-column>
             <el-table-column fixed="right" label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="primary" size="small"
-                        icon="el-icon-zoom-in">查看</el-button>
-                    <el-button type="danger" size="small" @click="del(scope.row)" icon="el-icon-delete">删除</el-button>
+                    <el-button :circle="btnS.isCircle" @click="handleClick(scope.row)" type="primary" size="small"
+                        :icon="btnS.icon1">{{ btnS.msg1 ? btnS.msg1 : ''
+                        }}</el-button>
+                    <el-button :circle="btnS.isCircle" type="danger" size="small" @click="del(scope.row)"
+                        :icon="btnS.icon2">{{
+                            btnS.msg2 ? btnS.msg2 : ''
+                        }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <div class="pagination">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="5"
-                layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]" :page-size="5" layout="total, sizes, prev, pager, next, jumper"
+                :total="tableData.length">
             </el-pagination>
 
         </div>
@@ -35,6 +41,10 @@ export default {
             type: Array,
             default: []
         },
+        isShowIndex: {
+            type: Boolean,
+            default: false
+        },
         loading: {
             type: Boolean,
             default: false
@@ -42,6 +52,14 @@ export default {
         total: {
             type: Number,
             default: 0
+        },
+        btnS: {
+            type: Object,
+            default: {}
+        },
+        stripe: {
+            type: Boolean,
+            default: false
         }
 
     },
@@ -76,13 +94,11 @@ export default {
         },
         handleSizeChange(val) {
             this.pageSize = val
-            // this.pageSize = val
-            // this.pageSize = 1
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
             this.currentPage = val
-            console.log(`当前页: ${val}`);
+            // console.log(`当前页: ${val}`);
         },
 
         currentIndex(index) {

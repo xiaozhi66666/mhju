@@ -49,6 +49,8 @@ export default {
                 // 退出登录
                 this.$store.commit('loginOut')
                 this.$router.push('/login')
+                // this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+                this.$message({ message: '退出登录成功！', type: 'success' })
             } else {
                 this.$message({ message: '修改个人资料模块待开发中~', type: 'success' })
             }

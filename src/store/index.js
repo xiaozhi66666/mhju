@@ -29,13 +29,15 @@ const actions = {
         // 校验是否通过
         const { data } = await loginAPI(userInfo)
         const { status, message } = data.data
+        console.log('触发登录');
         if (status === 200) {
             Message({ message, type: 'success' })
             content.commit('getLogin', data.data)
             // this.getLogin(data.data)
-            router.push(
-                { path: '/home' }
-            )
+            // router.push(
+            //     { path: '/home' }
+            // )
+            router.push('/home')
         }
 
     }
