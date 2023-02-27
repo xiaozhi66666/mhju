@@ -9,10 +9,14 @@
                 <div class="login-form">
                     <el-form ref="form" :rules="rules" :model="mhjy" label-width="80px">
                         <el-form-item label="用户名" prop="username">
-                            <el-input v-model="mhjy.username"></el-input>
+                            <el-input v-model="mhjy.username">
+                                <template slot="prepend"><i class="el-icon-user"></i></template>
+                            </el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input v-model="mhjy.password" type="password"></el-input>
+                            <el-input v-model="mhjy.password" type="password" @change="login">
+                                <template slot="prepend"><i class="el-icon-lock"></i></template>
+                            </el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" size="large" @click="login">登录</el-button>

@@ -1,8 +1,8 @@
 <template>
     <div class="menu">
-        <el-aside width="200px">
-            <el-menu router default-active="2" class="el-menu-vertical-demo" background-color="#545c64"
-                text-color="#fff" active-text-color="#ffd04b">
+        <el-aside width="200px" style="background-color: #21a0ff">
+            <el-menu router default-active="2" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff"
+                active-text-color="#ffd04b">
                 <template v-for="(i, index) in menus">
                     <el-submenu :index="index + ''" :key="index" v-if="!i.hidden">
                         <template slot="title">

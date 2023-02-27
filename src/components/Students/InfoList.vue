@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="search">
-            <Search :label="labelMsg" @addStuInfo="addInfo" />
+            <Search :label="labelMsg" @addStuInfo="addInfo" @reset="reset" />
         </div>
-        <From @del="del" @open="open" :stripe="true" :tableData="infoList" :propsArray="propsArray" :btnS="btnInfo"
+        <Table @del="del" @open="open" :stripe="true" :tableData="infoList" :propsArray="propsArray" :btnS="btnInfo"
             :loading="isLoading" />
         <!-- 对话框 -->
         <div class="dialog">
@@ -90,12 +90,12 @@
 
 <script>
 import Search from '@/components/common/Search.vue'
-import From from '@/components/common/Form.vue'
+import Table from '@/components/common/Table.vue'
 import { getInfosAPI } from '@/api/stu'
 import _ from 'lodash'
 export default {
     name: 'MhjyInfoList',
-    components: { Search, From },
+    components: { Search, Table },
     data() {
         return {
             infoList: [],
@@ -165,6 +165,16 @@ export default {
                 age: '',
 
             },
+            sex: [
+                {
+                    label: '男',
+                    value: 1
+                },
+                {
+                    label: '女',
+                    value: 2
+                }
+            ],
             labelMsg: {
                 msg1: '姓名',
                 msg2: '手机号'
@@ -188,11 +198,7 @@ export default {
             // console.log(res);
             this.infoList = data.data.list
             this.infoList.map(i => {
-                if (i.sex == 1) {
-                    i.sex = '男'
-                } else {
-                    i.sex = '女'
-                }
+                i.sex == 1 ? i.sex = '男' : i.sex = '女'
             })
             this.isLoading = false
         },
@@ -220,13 +226,28 @@ export default {
             this.isEdit = true
             this.form = _.cloneDeep(i)
         },
+        reset() {
+            console.log('info');
+            this.getInfos()
+        },
+        //编辑
         async edit() {
             try {
                 await this.$refs['formInfo'].validate()
                 if (this.isEdit) {
                     this.infoList = this.infoList.filter((item) => item.phone !== this.form.phone)
                 }
+                this.form.sex == 1 ? this.form.sex = '男' : this.form.sex = '女'
+                // if (this.form.sex == 1) {
+                //     this.form.sex = '男'
+                // } else {
+                //     this.form.sex = '女'
+                // }
                 this.infoList.unshift(this.form)
+                this.$message({
+                    message: '修改信息成功！',
+                    type: 'success'
+                })
                 this.dialogFormVisible = false
                 // this.$refs['form'].resetField()
             } catch (error) {

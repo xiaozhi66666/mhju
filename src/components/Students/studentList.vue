@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="add">
-            <Search @addStuInfo="addStuInfo" @searchInfo="searchInfo" :label="labelMsg" />
+            <Search @addStuInfo="addStuInfo" @searchInfo="searchInfo" :label="labelMsg" @reset="reset" />
         </div>
-        <Form :btnS="btnInfo" :isShowIndex="true" :loading="loading" :total="total" :tableData="stuData"
+        <Table @update="update" :btnS="btnInfo" :isShowIndex="true" :loading="loading" :total="total" :tableData="stuData"
             :propsArray="propsArray" @open="openDialog" @del="del" />
         <div class="dialog">
-            <el-dialog :title="isShowInfo ? '学生详细信息' : '学生信息录入'" :visible.sync="dialogVisible" width="40%">
+            <el-dialog :title="isShowInfo ? '学生详细信息' : '学生信息录入'" :visible.sync="dialogVisible" width="40%" @close="close">
                 <div class="body" v-if="isShowInfo">
                     <img :src="studentInfo.imgUrl" alt="" class="userImg">
                     <div class="info">
@@ -36,26 +36,26 @@
                                 <el-option label="女" value="2"></el-option>
                             </el-select>
                         </el-form-item>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="submitForm">确 定</el-button>
-                        </div>
                     </el-form>
+                </div>
+                <div slot="footer" class="dialog-footer" v-if="!isShowInfo">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submitForm">确 定</el-button>
                 </div>
             </el-dialog>
             <!-- <el-dialog title="学生信息录入" :visible.sync="dialogFormVisible" width="30%" @close="closeAdd">
 
-                    </el-dialog> -->
+                                                                                                                                    </el-dialog> -->
         </div>
     </div>
 </template>
 <script>
-import Form from '@/components/common/Form.vue'
+import Table from '@/components/common/Table.vue'
 import Search from '@/components/common/Search.vue'
 import { getStuListAPI } from '@/api/stu'
 import _ from 'lodash'
 export default {
-    components: { Form, Search },
+    components: { Table, Search },
     data() {
         return {
             stuData: [],
@@ -140,6 +140,9 @@ export default {
         this.getStuList()
     },
     methods: {
+        update() {
+            this.getStuList()
+        },
         async getStuList() {
             this.loading = true
             try {
@@ -182,6 +185,11 @@ export default {
                 this.$message({ message: '已取消删除', type: "info" })
             }
         },
+        reset() {
+            console.log('stu');
+            // if(this.studentInfo.)
+            this.getStuList()
+        },
         // 新增
         addStuInfo() {
             this.dialogVisible = true
@@ -191,11 +199,11 @@ export default {
         },
         // 查询
         searchInfo(i) {
-            if (i.id == '' && i.user == '') {
-                this.getStuList()
-            } else {
-                this.stuData = this.stuData.filter((item) => i.id === item.id || i.user === item.name)
-            }
+            this.stuData = this.stuData.filter((item) => i.id === item.id || i.user === item.name)
+            // if (i.id == '' && i.user == '') {
+            //     this.getStuList()
+            // } else {
+            // }
         },
         test() {
 
@@ -209,8 +217,8 @@ export default {
                 console.log('深克隆结果', obj);
                 this.stuData.unshift({ ...obj, imgUrl: 'https://img2.baidu.com/it/u=2321976118,1503111808&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500' })
                 this.$message({ message: '新增学生信息成功！', type: 'success' })
-                this.dialogFormVisible = false
-                // this.$refs['form'].resetFields()
+                this.dialogVisible = false
+                this.$refs['form'].resetFields()
             } catch (error) {
                 this.$message({ message: '未通过验证', type: 'error' })
                 console.log(error);
@@ -223,6 +231,11 @@ export default {
             console.log('关闭了');
             // 关闭时重置所有值以及校验结果
             this.$refs['form'].resetFields()
+        },
+        close() {
+            if (!this.isShowInfo) {
+                this.$refs['form'].resetFields()
+            }
         }
         // open() {
         //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

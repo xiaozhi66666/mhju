@@ -1,6 +1,9 @@
 <template>
     <div class="table">
-        <el-table :stripe="stripe" v-loading="loading" border :data="comData" style="width: 100%">
+        <div class="export">
+            <el-button type="primary" size="medium" @click="exportExcel" class="exportBtn">Excel导出</el-button>
+        </div>
+        <el-table id="outTable" :stripe="stripe" v-loading="loading" border :data="comData" style="width: 100%">
             <div v-if="isShowIndex">
                 <el-table-column type="index" align="center" :index="currentIndex">
                 </el-table-column>
@@ -24,12 +27,13 @@
                 :page-sizes="[5, 10, 15, 20]" :page-size="5" layout="total, sizes, prev, pager, next, jumper"
                 :total="tableData.length">
             </el-pagination>
-
         </div>
     </div>
 </template>
 
 <script>
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 export default {
     name: 'MhjyForm',
     props: {
@@ -105,6 +109,31 @@ export default {
             // console.log('index-----------', index);
             // 序号 = (默认序号 + 1 + （ 当前页码 - 1 ） * 一页条数 ) + 1
             return index + 1 + (this.currentPage - 1) * this.pageSize
+        },
+        exportExcel() {
+            // this.$emit('update')
+            // this.pageSize = 30
+            this.handleSizeChange(30)
+            console.log('this.pageSize============', this.pageSize);
+            // this.currentPage = 1
+            this.$nextTick(() => {
+                var xlsxParam = { raw: true }
+                var table = document.querySelector('#outTable').cloneNode(true)
+                table.removeChild(table.querySelector('.el-table__fixed-right'))
+                var wb = XLSX.utils.table_to_book(table, xlsxParam)
+                var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+                try {
+                    FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'fileName.xlsx')
+                    this.handleSizeChange(5)
+                } catch (e) {
+                    if (typeof console !== 'undefined') {
+                        console.log(e, wbout);
+                    }
+                }
+            })
+            setTimeout(() => {
+            }, 10)
+            // this.pageSize = 5
         }
     },
 };
@@ -112,6 +141,24 @@ export default {
 
 <style lang="less" scoped>
 .table {
+
+    // position: relative;
+    .export {
+        width: 100%;
+        // position: relative;
+        display: flex;
+        justify-content: end;
+        padding-bottom: 20px;
+
+        .exportBtn {
+            // position: absolute;
+            right: 10px;
+
+            // overflow: hidden;
+        }
+
+    }
+
     .pagination {
         margin-top: 30px;
     }

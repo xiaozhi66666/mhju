@@ -7,10 +7,10 @@ const whiteList = ['/login', '/404']
 // const isLogin = storage.get('userInfo')
 router.beforeEach((to, from, next) => {
     const isLogin = store.state.userInfo.token
+    console.log('isLogin=================>', isLogin);
     // 获取token
     // 判断是否已经登录
     // 已登录
-    console.log('isLogin=================>', isLogin);
     if (isLogin) {
         // next(to.path)
         // 判断是否登录后要跳转的是登录页 => 是 => 强制不允许再次访问login页面 => 否则放行

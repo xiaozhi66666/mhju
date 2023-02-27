@@ -1,12 +1,12 @@
 class Stroage {
     set(key, value) {
         if (typeof value === 'object') {
-            localStorage.setItem(key, JSON.stringify(value))
+            sessionStorage.setItem(key, JSON.stringify(value))
         }
-        localStorage.setItem(key, JSON.stringify(value))
+        sessionStorage.setItem(key, JSON.stringify(value))
     }
     get(key) {
-        const value = localStorage.getItem(key)
+        const value = sessionStorage.getItem(key)
         try {
             return JSON.parse(value)
         } catch (error) {
@@ -14,7 +14,7 @@ class Stroage {
         }
     }
     remove(key) {
-        localStorage.removeItem(key)
+        sessionStorage.removeItem(key)
     }
 }
 
