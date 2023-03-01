@@ -32,6 +32,9 @@ request.interceptors.response.use(function (response, reject) {
 }, function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
+    if (error.message.includes('timeout')) {
+        Message({ message: '网络请求超时，请重试！', type: 'warning', duration: 3 * 1000 })
+    }
     return Promise.reject(error);
 });
 
