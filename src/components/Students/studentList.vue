@@ -5,6 +5,7 @@
         </div>
         <Table @update="update" :btnS="btnInfo" :isShowIndex="true" :loading="loading" :total="total" :tableData="stuData"
             :propsArray="propsArray" @open="openDialog" @del="del" />
+        <!-- 对话框 -->
         <div class="dialog">
             <el-dialog :title="isShowInfo ? '学生详细信息' : '学生信息录入'" :visible.sync="dialogVisible" width="40%" @close="close">
                 <div class="body" v-if="isShowInfo">

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="search">
-            <Search :label="labelMsg" @addStuInfo="addInfo" @reset="reset" />
+            <Search :label="labelMsg" @addStuInfo="addInfo" @reset="reset" @searchInfo="searchInfo" />
         </div>
         <Table @del="del" @open="open" :stripe="true" :tableData="infoList" :propsArray="propsArray" :btnS="btnInfo"
             :loading="isLoading" />
@@ -219,6 +219,14 @@ export default {
             // 移除校验以及恢复初始值
             this.$refs['formInfo'].resetFields()
             this.isEdit = false
+        },
+        // 查询
+        searchInfo(i) {
+            this.infoList = this.infoList.filter((item) => i.id === item.phone || i.user === item.name)
+            // if (i.id == '' && i.user == '') {
+            //     this.getStuList()
+            // } else {
+            // }
         },
         open(i) {
             // 打开弹框

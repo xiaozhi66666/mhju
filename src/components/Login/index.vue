@@ -14,7 +14,7 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input v-model="mhjy.password" type="password" @change="login">
+                            <el-input v-model="mhjy.password" type="password">
                                 <template slot="prepend"><i class="el-icon-lock"></i></template>
                             </el-input>
                         </el-form-item>
