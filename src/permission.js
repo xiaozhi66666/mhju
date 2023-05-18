@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
         // 判断是否登录后要跳转的是登录页 => 是 => 强制不允许再次访问login页面 => 否则放行
         if (to.path == '/login') {
             // store.commit('loginOut')
-            next('/')
+            next('/home')
         } else {
             next()
         }

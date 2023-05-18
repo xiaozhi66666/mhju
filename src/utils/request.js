@@ -1,7 +1,6 @@
 import axios from "axios";
-import storage from "./storage";
 import { Message } from "element-ui";
-const baseURL = 'https://www.fastmock.site/mock/052388bff43d641e9daa8648836c6e4a/mhjy'
+const baseURL = '/api'
 const request = axios.create({
     baseURL,
     timeout: 3000,

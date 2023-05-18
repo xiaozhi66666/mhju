@@ -1,10 +1,10 @@
 <template>
     <div class="menu">
         <el-aside width="200px" style="background-color: #21a0ff">
-            <el-menu router default-active="2" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff"
-                active-text-color="#ffd04b">
+            <el-menu router default-active="/home/student" class="el-menu-vertical-demo" background-color="#545c64"
+                text-color="#fff">
                 <template v-for="(i, index) in menus">
-                    <el-submenu :index="index + ''" :key="index" v-if="!i.hidden">
+                    <el-submenu :index="(index + 1) + ''" :key="index" v-if="!i.hidden">
                         <template slot="title">
                             <i :class="i.icon"></i>
                             <span>{{ i.name }}</span>
@@ -38,7 +38,6 @@ export default {
 
     },
     created() {
-        // console.log(this.$router.options.routes);
         this.menus = this.$router.options.routes
     },
 

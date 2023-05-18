@@ -147,7 +147,7 @@ export default {
         width: 100%;
         // position: relative;
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         padding-bottom: 20px;
 
         .exportBtn {

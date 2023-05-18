@@ -180,7 +180,8 @@ export default {
                 msg2: '手机号'
             },
             isLoading: false,
-            dialogFormVisible: false
+            dialogFormVisible: false,
+
         };
     },
     created() {
@@ -189,6 +190,12 @@ export default {
 
     mounted() {
 
+    },
+    computed: {
+        // 这个是截取表格中的部分数据，放到了 table 组件中来显示
+        sliceTable() {
+            return this.tableData.slice(this.startIndex, this.startIndex + 9);
+        },
     },
 
     methods: {

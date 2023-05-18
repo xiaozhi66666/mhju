@@ -37,6 +37,7 @@
                                 <el-option label="女" value="2"></el-option>
                             </el-select>
                         </el-form-item>
+
                     </el-form>
                 </div>
                 <div slot="footer" class="dialog-footer" v-if="!isShowInfo">
@@ -44,9 +45,6 @@
                     <el-button type="primary" @click="submitForm">确 定</el-button>
                 </div>
             </el-dialog>
-            <!-- <el-dialog title="学生信息录入" :visible.sync="dialogFormVisible" width="30%" @close="closeAdd">
-
-                                                                                                                                    </el-dialog> -->
         </div>
     </div>
 </template>
@@ -61,6 +59,7 @@ export default {
         return {
             stuData: [],
             total: 0,
+
             propsArray: [
                 {
                     prop: 'birdthay',
@@ -141,6 +140,7 @@ export default {
         this.getStuList()
     },
     methods: {
+
         update() {
             this.getStuList()
         },
@@ -228,14 +228,14 @@ export default {
             }
         },
         // 关闭新增信息弹框的回调
-        closeAdd() {
-            console.log('关闭了');
-            // 关闭时重置所有值以及校验结果
-            this.$refs['form'].resetFields()
-        },
+        // closeAdd() {
+        //     console.log('关闭了');
+        //     // 关闭时重置所有值以及校验结果
+        //     this.$refs['form'].resetFields()
+        // },
         close() {
             if (!this.isShowInfo) {
-                this.$refs['form'].resetFields()
+                // this.$refs['form'].resetFields()
             }
         }
         // open() {
